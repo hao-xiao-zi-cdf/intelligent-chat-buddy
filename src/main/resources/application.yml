@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: intelligent-chat-buddy
+  profiles:
+    active: local
+server:
+  port: 8020
+  servlet:
+    context-path: /api
+# springdoc-openapi
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.hao_xiao_zi.intelligentchatbuddy.controller
+# knife4j
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
