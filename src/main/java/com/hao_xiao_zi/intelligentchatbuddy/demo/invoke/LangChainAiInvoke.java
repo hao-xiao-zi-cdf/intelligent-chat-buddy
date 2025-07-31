@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * LangChain4j调用千问大模型
  */
-@Component
+//@Component
 public class LangChainAiInvoke implements CommandLineRunner {
 
     @Value("${spring.ai.dashscope.api-key}")

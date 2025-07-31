@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * 本地部署ollama模型,并使用SpringAI调用
  */
-@Component
+//@Component
 public class OllamaAiInvoke implements CommandLineRunner {
 
     @Resource
