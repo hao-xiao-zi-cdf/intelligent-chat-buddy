@@ -2,11 +2,16 @@ package com.hao_xiao_zi.intelligentchatbuddy.app;
 
 import com.hao_xiao_zi.intelligentchatbuddy.advisor.MySimpleLoggerAdvisor;
 import com.hao_xiao_zi.intelligentchatbuddy.chatmemory.MysqlBasedChatMemory;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
+import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -80,5 +85,25 @@ public class LoveApp {
                 .entity(LoveReport.class);
         log.info("报告：{}", entity);
         return entity;
+    }
+
+    @Resource
+    private VectorStore loveAppVectorStore;
+
+    @Resource
+    private Advisor loveAppRagCloudAdvisor;
+
+    public String doChatByRag(String userMessage, String chatId){
+        String content = chatClient.prompt()
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                                .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+//                .advisors(// 添加基于向量搜索的问答拦截器
+//                        new QuestionAnswerAdvisor(loveAppVectorStore))
+                .advisors(// 应用增强检索服务（云知识库服务）
+                        loveAppRagCloudAdvisor)
+                .user(userMessage)
+                .call().content();
+        log.info("content: {}", content);
+        return content;
     }
 }
