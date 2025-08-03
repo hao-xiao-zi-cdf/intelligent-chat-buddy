@@ -98,12 +98,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--        spring-ai集成ollama    https://java2ai.com/docs/1.0.0-M6.1/models/ollama/-->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
-            <version>1.0.0-M6</version>
-        </dependency>
         <!--        结构化输出   -->
         <dependency>
             <groupId>com.github.victools</groupId>
@@ -127,6 +121,26 @@
             <artifactId>spring-ai-markdown-document-reader</artifactId>
             <version>1.0.0-M6</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
+            <version>1.0.0-M7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-pgvector-store</artifactId>
+            <version>1.0.0-M6</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -163,5 +177,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

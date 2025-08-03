@@ -93,14 +93,20 @@ public class LoveApp {
     @Resource
     private Advisor loveAppRagCloudAdvisor;
 
+    @Resource
+    private VectorStore pgVectorVectorStore;
+
     public String doChatByRag(String userMessage, String chatId){
         String content = chatClient.prompt()
                 .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
                                 .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
 //                .advisors(// 添加基于向量搜索的问答拦截器
 //                        new QuestionAnswerAdvisor(loveAppVectorStore))
-                .advisors(// 应用增强检索服务（云知识库服务）
-                        loveAppRagCloudAdvisor)
+//                .advisors(// 应用增强检索服务（云知识库服务）
+//                        loveAppRagCloudAdvisor)
+                .advisors(
+                        new QuestionAnswerAdvisor(pgVectorVectorStore)
+                )
                 .user(userMessage)
                 .call().content();
         log.info("content: {}", content);
