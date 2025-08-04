@@ -5,9 +5,6 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * Created with IntelliJ IDEA.
  * Description:
@@ -49,7 +46,7 @@ class LoveAppTest {
     @Test
     void doChatByRag() {
         String chatId = UUID.randomUUID().toString();
-        String message = "spring";
+        String message = "我已经找到恋爱对象了，但是不我知道怎们在恋爱中保持新鲜感";
         String answer = loveApp.doChatByRag(message, chatId);
         Assertions.assertNotNull(answer);
     }

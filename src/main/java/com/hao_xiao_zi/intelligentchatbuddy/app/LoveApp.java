@@ -2,12 +2,13 @@ package com.hao_xiao_zi.intelligentchatbuddy.app;
 
 import com.hao_xiao_zi.intelligentchatbuddy.advisor.MySimpleLoggerAdvisor;
 import com.hao_xiao_zi.intelligentchatbuddy.chatmemory.MysqlBasedChatMemory;
+import com.hao_xiao_zi.intelligentchatbuddy.rag.LoveAppRagCustomAdvisorFactory;
+import com.hao_xiao_zi.intelligentchatbuddy.rag.QueryRewrite;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
-import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -96,18 +97,24 @@ public class LoveApp {
     @Resource
     private VectorStore pgVectorVectorStore;
 
+    @Resource
+    private QueryRewrite queryRewrite;
+
     public String doChatByRag(String userMessage, String chatId){
+        // 查询重写
+        String userMessageRewrite = queryRewrite.rewrite(userMessage);
         String content = chatClient.prompt()
                 .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
                                 .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
-//                .advisors(// 添加基于向量搜索的问答拦截器
+//                .advisors(// 应用Rag知识库问答
 //                        new QuestionAnswerAdvisor(loveAppVectorStore))
-//                .advisors(// 应用增强检索服务（云知识库服务）
+//                .advisors(// 应用Rag增强检索服务（基于云知识库服务）
 //                        loveAppRagCloudAdvisor)
-                .advisors(
-                        new QuestionAnswerAdvisor(pgVectorVectorStore)
-                )
-                .user(userMessage)
+//                .advisors(// 应用Rag增强检索服务（基于PgVector向量存储）
+//                        new QuestionAnswerAdvisor(pgVectorVectorStore))
+                .advisors(// 应用Rag增强检索服务（自定义）
+                        LoveAppRagCustomAdvisorFactory.createLoveAppRagCustomAdvisor(loveAppVectorStore, "单身"))
+                .user(userMessageRewrite)
                 .call().content();
         log.info("content: {}", content);
         return content;
