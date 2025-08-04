@@ -140,7 +140,6 @@
             <artifactId>spring-ai-pgvector-store</artifactId>
             <version>1.0.0-M6</version>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
