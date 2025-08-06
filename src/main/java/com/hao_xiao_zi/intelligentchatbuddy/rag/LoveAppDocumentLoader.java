@@ -34,7 +34,7 @@ public class LoveAppDocumentLoader {
         List<Document> documents = new ArrayList<>();
         // 解析资源
         try {
-            Resource[] resources = resourcePatternResolver.getResources("classpath:document/*.md");
+            Resource[] resources = resourcePatternResolver.getResources("classpath:static/document/*.md");
             for (Resource resource : resources) {
                 String fileName = resource.getFilename();
                 // 获取状态

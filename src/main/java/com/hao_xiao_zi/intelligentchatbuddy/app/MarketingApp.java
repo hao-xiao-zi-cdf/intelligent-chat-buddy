@@ -36,7 +36,7 @@ public class MarketingApp {
 
     @PostConstruct
     public void init() throws IOException {
-        ClassPathResource resource = new ClassPathResource("/templates/prompts/system-message.st");
+        ClassPathResource resource = new ClassPathResource("/static/prompts-templates/system-message.st");
         String templateStr = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
         systemPromptTemplate = new SystemPromptTemplate(templateStr);
     }
