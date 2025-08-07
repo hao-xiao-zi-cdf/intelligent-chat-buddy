@@ -9,6 +9,17 @@
       "env": {
         "AMAP_MAPS_API_KEY": "665bcd3a7ad9e17b0258fb505792a867"
       }
+    },
+    "image-search-mcp": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "image-search-mcp/target/image-search-mcp-0.0.1-SNAPSHOT.jar",
+        "--spring.ai.mcp.server.stdio=true",
+        "--spring.main.web-application-type=none",
+        "--logging.pattern.console="
+      ],
+      "env": {}
     }
   }
 }

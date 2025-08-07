@@ -12,8 +12,12 @@ spring:
         max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
     mcp:
       client:
-        stdio:
-          servers-configuration: classpath:mcp-servers.json
+        sse:
+          connections:
+            server1:
+              url: http://localhost:8127
+#        stdio:
+#          servers-configuration: classpath:mcp-servers.json
 server:
   port: 8020
   servlet:
