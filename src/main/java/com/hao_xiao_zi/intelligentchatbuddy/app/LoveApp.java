@@ -16,6 +16,7 @@ import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,12 +68,28 @@ public class LoveApp {
                 .user(userMessage)
                 // 指定对话ID和最大检索消息数(10条)添加到提示词中
                 .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
-                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 1))
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
                 .call()
                 .chatResponse();
         String answer = Objects.requireNonNull(chatResponse).getResult().getOutput().getText();
         log.info("回答：{}", answer);
         return answer;
+    }
+
+    /**
+     * 使用SSE进行流式输出
+     * @param userMessage 用户输入
+     * @param chatId 聊天ID
+     * @return 流式输出结果
+     */
+    public Flux<String> doChatWithSSE(String userMessage, String chatId){
+        return chatClient.prompt()
+                .user(userMessage)
+                // 指定对话ID和最大检索消息数(10条)添加到提示词中
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 1))
+                .stream()
+                .content();
     }
 
     record LoveReport(String title, List<String> suggestions) {

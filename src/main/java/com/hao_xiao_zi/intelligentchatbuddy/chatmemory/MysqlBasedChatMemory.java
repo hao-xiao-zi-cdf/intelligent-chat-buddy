@@ -25,7 +25,7 @@ public class MysqlBasedChatMemory implements ChatMemory{
     public void add(String conversationId, Message message) {
         // 调用方法转换为ChatMessage
         ChatMessage chatMessage = convertToChatMessage(message);
-        chatMessage.setConversation_id(conversationId);
+        chatMessage.setConversationId(conversationId);
         boolean isOk = chatMessageService.save(chatMessage);
         if (!isOk) {
             throw new RuntimeException("保存会话记录失败");
@@ -40,7 +40,7 @@ public class MysqlBasedChatMemory implements ChatMemory{
         // 调用方法转换为ChatMessage,并设置conversation_id
         List<ChatMessage> chatMessages = messages.stream().map(message -> {
             ChatMessage chatMessage = convertToChatMessage(message);
-            chatMessage.setConversation_id(conversationId);
+            chatMessage.setConversationId(conversationId);
             return chatMessage;
         }).toList();
         boolean isOk = chatMessageService.saveBatch(chatMessages);
@@ -75,9 +75,9 @@ public class MysqlBasedChatMemory implements ChatMemory{
     // Message转ChatMessage
     private ChatMessage convertToChatMessage(Message message) {
         return ChatMessage.builder()
-                .message_type(message.getMessageType().getValue())
+                .messageType(message.getMessageType().getValue())
                 .content(message.getText())
-                .metadata(message.getMetadata().toString())
+                .metadata(JSONUtil.toJsonStr(message.getMetadata())) // 改为使用 toJsonStr
                 .build();
     }
 
@@ -87,7 +87,7 @@ public class MysqlBasedChatMemory implements ChatMemory{
         String content = chatMessage.getContent();
         // 获取metadata并解析成Map
         Map<String, Object> metadataMap = JSONUtil.toBean(chatMessage.getMetadata(), Map.class);
-        String messageType = chatMessage.getMessage_type();
+        String messageType = chatMessage.getMessageType();
 
         switch (messageType) {
             case "user":

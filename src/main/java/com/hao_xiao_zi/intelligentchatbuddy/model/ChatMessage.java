@@ -30,12 +30,12 @@ public class ChatMessage {
     /**
      * 会话ID
      */
-    private String conversation_id;
+    private String conversationId;
 
     /**
      * 消息类型
      */
-    private String message_type;
+    private String messageType;
 
     /**
      * 消息内容
@@ -50,16 +50,16 @@ public class ChatMessage {
     /**
      * 创建时间
      */
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 更新时间
      */
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 是否删除 0-未删除 1-已删除
      */
     @TableLogic
-    private Integer is_delete;
+    private Integer isDelete;
 }

@@ -39,11 +39,27 @@ public class WebSearchTool {
         paramMap.put("engine", "baidu");
         try {
             String response = HttpUtil.get(SEARCH_API_URL, paramMap);
+            
+            // 检查响应是否为有效的JSON格式
+            if (!JSONUtil.isTypeJSON(response)) {
+                return "Error: Invalid JSON response from search API";
+            }
+            
             // 取出返回结果的前 5 条
             JSONObject jsonObject = JSONUtil.parseObj(response);
+            
+            // 检查是否存在organic_results字段
+            if (!jsonObject.containsKey("organic_results")) {
+                return "Error: No search results found in response";
+            }
+            
             // 提取 organic_results 部分
             JSONArray organicResults = jsonObject.getJSONArray("organic_results");
-            List<Object> objects = organicResults.subList(0, 5);
+            if (organicResults == null || organicResults.isEmpty()) {
+                return "Error: Empty search results";
+            }
+            
+            List<Object> objects = organicResults.subList(0, Math.min(5, organicResults.size()));
             // 拼接搜索结果为字符串
             String result = objects.stream().map(obj -> {
                 JSONObject tmpJSONObject = (JSONObject) obj;
